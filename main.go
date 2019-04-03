@@ -6,7 +6,7 @@ import "fmt"
 func main() {
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
-		fmt.Println("Hi")
+		fmt.Println("Hi Ivan")
 
 		c.JSON(200, gin.H{
 			"message": "pong",
