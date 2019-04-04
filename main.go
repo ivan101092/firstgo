@@ -1,12 +1,25 @@
-// Section 3, 33
+// Section 4, 41
 
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
+
+type contactInfo struct {
+	email   string
+	zipCode int
+}
+
+type person struct {
+	firstName string
+	lastName  string
+	contact   contactInfo
+}
 
 func main() {
 	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=firstgo password=kiasu123")
@@ -38,9 +51,24 @@ func main() {
 		})
 	})
 
-	r.GET("/ping", func(c *gin.Context) {
+	r.GET("/structs", func(c *gin.Context) {
+		name := person{
+			firstName: "Ivan",
+			lastName:  "Satya",
+			contact: contactInfo{
+				email:   "ivansatya10@gmail.com",
+				zipCode: 60187,
+			},
+		}
+
+		name.firstName = "Satya"
+		name.lastName = "Putra"
+
+		fmt.Println(name)
+		fmt.Printf("%+v", name)
+
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": name,
 		})
 	})
 	r.Run() // listen and serve on 0.0.0.0:8080
