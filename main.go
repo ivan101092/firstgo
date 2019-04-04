@@ -1,4 +1,4 @@
-// Section 5, 49
+// Section 6, 52
 
 package main
 
@@ -64,10 +64,17 @@ func main() {
 	})
 
 	r.GET("/map", func(c *gin.Context) {
+		// Making an empty map
+		// colors := make(map[int]string)
+		// colors[10] = "#ffffff"
+		// delete(colors, 10)
+
 		colors := map[string]string{
 			"red":   "#ff0000",
 			"green": "#4bf745",
 		}
+
+		printMap(colors)
 
 		c.JSON(200, gin.H{
 			"map": colors,
