@@ -1,10 +1,21 @@
-// Section 3, 29
+// Section 3, 33
 
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+)
 
 func main() {
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=firstgo password=kiasu123")
+	defer db.Close()
+
+	if err != nil {
+		db.Close()
+	}
+
 	r := gin.Default()
 
 	r.GET("/", func(c *gin.Context) {
@@ -13,6 +24,7 @@ func main() {
 
 		// cards.saveToFile("Cards")
 		cards2 := newDeckFromFile("Cards")
+		cards2.shuffle()
 
 		c.JSON(200, gin.H{
 			"message": "pong",
