@@ -1,25 +1,12 @@
-// Section 4, 41
+// Section 5, 49
 
 package main
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
-
-type contactInfo struct {
-	email   string
-	zipCode int
-}
-
-type person struct {
-	firstName string
-	lastName  string
-	contact   contactInfo
-}
 
 func main() {
 	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=firstgo password=kiasu123")
@@ -64,12 +51,28 @@ func main() {
 		name.firstName = "Satya"
 		name.lastName = "Putra"
 
-		fmt.Println(name)
-		fmt.Printf("%+v", name)
+		// &variable Give me the memory address of the value this variable is pointing at
+		// namePointer := &name
+		// namePointer.updateName("A")
+
+		name.updateName("A")
+		name.print()
 
 		c.JSON(200, gin.H{
 			"message": name,
 		})
 	})
+
+	r.GET("/map", func(c *gin.Context) {
+		colors := map[string]string{
+			"red":   "#ff0000",
+			"green": "#4bf745",
+		}
+
+		c.JSON(200, gin.H{
+			"map": colors,
+		})
+	})
+
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
