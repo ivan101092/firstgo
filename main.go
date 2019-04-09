@@ -1,8 +1,13 @@
-// Section 6, 52
+// Section 7, 72
 
 package main
 
 import (
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -78,6 +83,57 @@ func main() {
 
 		c.JSON(200, gin.H{
 			"map": colors,
+		})
+	})
+
+	r.GET("/bot", func(c *gin.Context) {
+		eb := englishBot{}
+		sb := spanishBot{}
+
+		printGreeting(eb)
+		printGreeting(sb)
+
+		c.JSON(200, gin.H{
+			"eb": eb.getGreeting(),
+			"sb": sb.getGreeting(),
+		})
+	})
+
+	r.GET("/http", func(c *gin.Context) {
+		resp, err := http.Get("http://google.com")
+		if err != nil {
+			fmt.Print(err)
+			os.Exit(1)
+		}
+
+		bs := make([]byte, 99999)
+		resp.Body.Read(bs)
+		fmt.Println(string(bs))
+
+		lw := logWriter{}
+		io.Copy(lw, resp.Body)
+
+		c.JSON(200, gin.H{
+			"data": string(bs),
+			"err":  err,
+		})
+	})
+
+	r.GET("/channel", func(c *gin.Context) {
+		links := []string{
+			"http://google.com",
+			"http://facebook.com",
+			"http://stackoverflow.com",
+			"http://golang.org",
+			"http://amazon.com",
+		}
+
+		for _, link := range links {
+			go checkLink(link)
+		}
+
+		c.JSON(200, gin.H{
+			"links": links,
 		})
 	})
 
